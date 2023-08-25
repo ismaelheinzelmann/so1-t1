@@ -3,12 +3,12 @@ CXXFLAGS = -std=c++11 -Wall -Wextra
 
 SRC_DIR = src
 BUILD_DIR = build
-TARGET = app
+TARGET = escalonamento_ismael_matheus
 
 SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
 OBJECTS = $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SOURCES))
 
-.PHONY: all clean
+.PHONY: all clean dist
 
 all: $(BUILD_DIR) $(BUILD_DIR)/$(TARGET)
 
@@ -24,3 +24,5 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 clean:
 	rm -rf $(BUILD_DIR)
 
+dist: clean
+	tar czvf $(TARGET).tar.gz $(SRC_DIR) $(lastword $(MAKEFILE_LIST))
