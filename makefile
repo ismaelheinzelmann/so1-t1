@@ -26,4 +26,3 @@ clean:
 
 dist: clean
 	tar czvf $(TARGET).tar.gz $(SRC_DIR) $(lastword $(MAKEFILE_LIST))
-
