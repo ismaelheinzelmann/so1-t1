@@ -1,56 +1,44 @@
-//
-// Created by ismael on 29/08/23.
-//
+#include "ProcessContext.h"
 
-#include <array>
-#include "Register.cpp"
-using namespace std;
-namespace components{
-    class ProcessContext{
-    public:
-        ProcessContext(){
-            generalRegisters = std::array<Register, 6>();
-            programCounter = Register();
-            stackPointer = Register();
-            statusRegister = Register();
-        };
+namespace components {
 
-        std::array<Register, 6> getGeneralRegisters(){
-            return generalRegisters;
-        }
+    ProcessContext::ProcessContext() {
+        generalRegisters = std::array<Register, 6>();
+        programCounter = Register();
+        stackPointer = Register();
+        statusRegister = Register();
+    }
 
-        Register getPC(){
-            return programCounter;
-        }
+    std::array<Register, 6> ProcessContext::getGeneralRegisters() const {
+        return generalRegisters;
+    }
 
-        Register getSP(){
-            return stackPointer;
-        }
+    Register ProcessContext::getPC() const {
+        return programCounter;
+    }
 
-        Register getST(){
-            return statusRegister;
-        }
+    Register ProcessContext::getSP() const {
+        return stackPointer;
+    }
 
-        void setGeneralRegisters(std::array<Register, 6> newGeneralRegisters){
-            generalRegisters = newGeneralRegisters;
-        }
+    Register ProcessContext::getST() const {
+        return statusRegister;
+    }
 
-        void setPC(Register newPC){
-            programCounter = newPC;
-        }
+    void ProcessContext::setGeneralRegisters(const std::array<Register, 6>& newGeneralRegisters) {
+        generalRegisters = newGeneralRegisters;
+    }
 
-        void setSP(Register newSP){
-            stackPointer = newSP;
-        }
+    void ProcessContext::setPC(const Register& newPC) {
+        programCounter = newPC;
+    }
 
-        void setST(Register newST){
-            statusRegister = newST;
-        }
+    void ProcessContext::setSP(const Register& newSP) {
+        stackPointer = newSP;
+    }
 
-    private:
-        std::array<Register, 6> generalRegisters;
-        Register programCounter;
-        Register stackPointer;
-        Register statusRegister;
-    };
-}
+    void ProcessContext::setST(const Register& newST) {
+        statusRegister = newST;
+    }
+
+} // namespace components

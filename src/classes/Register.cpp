@@ -2,22 +2,20 @@
 // Created by ismael on 29/08/23.
 //
 #include <array>
-namespace components{
-    class Register {
-    public:
-        Register() {
-            content = std::array<unsigned char, 8>();
-        }
+#include "Register.h"
 
-        std::array<unsigned char, 8> getContent() {
-            return content;
-        }
+namespace components {
+    Register::Register() {
+        content = std::array<unsigned char, 8>();
+    }
 
-        void setContent(std::array<unsigned char, 8> newContent) {
-            content = newContent;
-        }
+    std::array<unsigned char, 8> Register::getContent() const {
+        return content;
+    }
 
-    private:
-        std::array<unsigned char, 8> content;
-    };
+    std::array<unsigned char, 8> content;
+
+    void Register::setContent(const std::array<unsigned char, 8> &newContent) {
+        content = newContent;
+    }
 }

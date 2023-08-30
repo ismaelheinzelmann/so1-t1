@@ -2,101 +2,100 @@
 // Created by ismael on 29/08/23.
 //
 #include "ProcessContext.cpp"
-
+#include "Process.h"
 namespace components {
-    enum PROCESS_STATE {
-        NOT_CREATED,
-        READY,
-        RUNNING,
-        FINALIZED
-    };
 
-    class Process {
-    public:
-        Process(int id, int priority, int startTime, int duration) {
-            this->id = id;
-            this->priority = priority;
-            this->startTime = startTime;
-            this->duration = duration;
-            this->state = NOT_CREATED;
-            lastStop = startTime;
+    Process::Process(int id, int priority, int startTime, int duration) {
+        this->id = id;
+        this->priority = priority;
+        this->startTime = startTime;
+        this->duration = duration;
+        remainingTime = duration;
+        this->state = NOT_CREATED;
+        lastStop = startTime;
 
-            context = ProcessContext();
-        }
+        context = ProcessContext();
+    }
 
-        // Getters
-        int getId() {
-            return id;
-        }
+    // Getters
+    int Process::getId() const {
+        return id;
+    }
 
-        int getPriority() {
-            return priority;
-        }
+    int Process::getPriority() const {
+        return priority;
+    }
 
-        int getStartTime() {
-            return startTime;
-        }
+    int Process::getStartTime() const {
+        return startTime;
+    }
 
-        int getDuration() {
-            return duration;
-        }
+    int Process::getDuration() const {
+        return duration;
+    }
 
-        int getPriorityLevel() {
-            return priorityLevel;
-        }
+    int Process::getPriorityLevel() const {
+        return priorityLevel;
+    }
 
-        PROCESS_STATE getState() {
-            return state;
-        }
+    PROCESS_STATE Process::getState() {
+        return state;
+    }
 
-        int getTurnarroundTime() {
-            return turnarroundTime;
-        }
+    int Process::getTurnarroundTime() const {
+        return turnarroundTime;
+    }
 
-        int getContextSwitches() {
-            return contextSwitches;
-        }
+    int Process::getContextSwitches() const {
+        return contextSwitches;
+    }
 
-        // Process Methods
+    int Process::getWaitingTime() const {
+        return turnarroundTime - duration;
+    }
 
-        void create() {
-            state = NOT_CREATED;
-        }
+    // Process Methods
+    // Conseguir, ao final do processo:
+    // Turnaround time -> Tempo desde a criação até o terminar sua execução.
+    // Tempo médio de espera -> Tempo que estava em seu estado pronto.
+    // Trocas de contexto -> Quantas vezes foi necessário trocar o contexto do processo. (Primeira execução ocorre uma troca)
 
-        void schedule() {
-            state = READY;
-        }
+    void instantiate() {
+        state = NOT_CREATED;
+    }
 
-        void run() {
-            state = RUNNING;
-        }
+    void create() {
+        state = READY;
+    }
 
-        void preempt(int time) {
-            state = READY;
-            lastStop = time;
-        }
+    void schedule() {
+        state = RUNNING;
+        contextSwitches++;
+    }
 
-        void finalize() {
-            state = FINALIZED;
-        }
+    void run() {
+        remainingTime--;
+    }
 
-        bool isRunning() {
-            return duration > 0;
-        }
+    void preempt() {
+        state = READY;
+        contextSwitches++;
+    }
 
+    void finalize(int time) {
+        state = FINALIZED;
+        turnarroundTime = time - startTime;
+    }
 
-    private:
-        int id;
-        int priority;
-        int startTime;
-        int duration;
-        int priorityLevel;
-        PROCESS_STATE state;
+    bool running() const {
+        return remainingTime > 0;
+    }
 
-        int turnarroundTime;
-        int contextSwitches;
-        int lastStop;
-
-        ProcessContext context;
-    };
+    ProcessStats getStats() const {
+        ProcessStats stats;
+        stats.turnarroundTime = turnarroundTime;
+        stats.waitingTime = getWaitingTime();
+        stats.contextSwitches = contextSwitches;
+        return stats;
+    }
 }

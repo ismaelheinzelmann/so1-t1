@@ -3,10 +3,10 @@
 
 #endif //SO1_T1_READ_FILE_H
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
+#include <c++/11/iostream>
+#include <c++/11/fstream>
+#include <c++/11/string>
+#include <c++/11/vector>
 
 using namespace std;
 
@@ -23,6 +23,20 @@ public:
            << endl;
         return os;
     }
+
+    int getDuration() const {
+        return duration;
+    }
+
+    int getPriority() const {
+        return priority;
+    }
+    
+    int getCreationTime() const {
+        return creation_time;
+    }
+
+
 
 private:
     int creation_time;
@@ -49,7 +63,7 @@ public:
         }
 
         while (myfile >> a >> b >> c) {
-            ProcessParams *p = new ProcessParams(a, b, c);
+            auto *p = new ProcessParams(a, b, c);
             processes.push_back(p);
         }
 
@@ -57,17 +71,20 @@ public:
     }
 
     void print_processes_params() {
-        vector<ProcessParams *>::iterator iter = processes.begin();
+        auto iter = processes.begin();
 
-        for (iter; iter < processes.end(); iter++) {
+        for (; iter < processes.end(); iter++) {
             ProcessParams *p = *iter;
             cout << *p;
         }
     }
 
+    vector<ProcessParams *> get_processes() {
+        return processes;
+    }
+
     ~File() {
-        for (int i = 0; i < processes.size(); i++) {
-            ProcessParams *p = processes[i];
+        for (auto p: processes) {
             delete p;
         }
     }
@@ -77,8 +94,8 @@ private:
     vector<ProcessParams *> processes;
 };
 
-int main() {
-    File f;
-    f.read_file();
-    f.print_processes_params();
-}
+//int main() {
+//    File f;
+//    f.read_file();
+//    f.print_processes_params();
+//}
