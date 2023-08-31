@@ -1,31 +1,33 @@
-CXX = g++
-CXXFLAGS = -std=c++11 -Wall -Wextra
+CXX := g++
+CXXFLAGS := -std=c++11 -Wall -Wextra
 
-SRC_DIR = src
-BUILD_DIR = build
-TARGET = scheduler
+SRCDIR := source
+OBJDIR := obj
+BINDIR := bin
 
-SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
-OBJECTS = $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SOURCES))
+SOURCES := $(wildcard $(SRCDIR)/*.cpp)
+OBJECTS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES))
 
-.PHONY: all clean dist
+TARGET := $(BINDIR)/scheduler
 
-all: $(BUILD_DIR) $(BUILD_DIR)/$(TARGET) copy_entrada
+all: $(TARGET)
 
-$(BUILD_DIR):
-	mkdir -p $(BUILD_DIR)
+$(TARGET): $(OBJDIR) $(BINDIR) $(OBJECTS) main.cpp
+	$(CXX) $(CXXFLAGS) main.cpp $(OBJECTS) -o $(TARGET)
 
-$(BUILD_DIR)/$(TARGET): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -o $@ $^
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
 
-copy_entrada:
-	cp $(SRC_DIR)/entrada.txt $(BUILD_DIR)/entrada.txt
+$(BINDIR):
+	mkdir -p $(BINDIR)
 
 clean:
-	rm -rf $(BUILD_DIR)
+	rm -rf $(OBJDIR) $(BINDIR)
 
-dist: clean
-	tar czvf $(TARGET).tar.gz $(SRC_DIR) $(lastword $(MAKEFILE_LIST))
+run: clean all
+	./$(TARGET)
+
+.PHONY: all clean
