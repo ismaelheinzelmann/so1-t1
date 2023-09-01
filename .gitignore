@@ -34,3 +34,5 @@
 # Build
 build/
 **/*.tar.gz
+bin/
+obj/
