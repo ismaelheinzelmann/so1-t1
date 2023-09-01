@@ -3,6 +3,7 @@
 //
 
 #include "FCFS.h"
+#include <utility>
 #include <vector>
 #include <algorithm>
 #include <iostream>
@@ -24,7 +25,7 @@ void FCFS::runScheduler() {
             }
         } else {
             if (!readyQueue.empty()) {
-                currentProcess = &readyQueue.front();
+                currentProcess = readyQueue.front();
                 workingContext = currentProcess->getContext();
                 currentProcess->schedule();
                 currentProcess->run();
@@ -41,8 +42,7 @@ void FCFS::runScheduler() {
 
 void FCFS::verifyProcessesToCreate() {
     for (auto it = processes.begin(); it != processes.end();) {
-        if (it->getStartTime() == time) {
-            it->create();
+        if ((*it)->getStartTime() == time) {
             readyQueue.push(*it);
             it = processes.erase(it);
         } else {
@@ -54,7 +54,7 @@ void FCFS::verifyProcessesToCreate() {
 void FCFS::printTimelineHeader() {
     std::cout << "tempo\t";
     for (const auto &process: processes) {
-        std::cout << "P" << process.getId() << "\t";
+        std::cout << "P" << process->getId() << "\t";
     }
     std::cout << std::endl;
 }
@@ -62,23 +62,19 @@ void FCFS::printTimelineHeader() {
 void FCFS::printTimeline() {
     std::cout << time << "-" << time + 1 << "\t";
     for (const auto &process: processes) {
-        if (process.getState() == Process::PROCESS_STATE::RUNNING) {
+        if (process->getState() == Process::PROCESS_STATE::RUNNING) {
             std::cout << "##\t";
-        } else if (process.getState() == Process::PROCESS_STATE::READY) {
+        } else if (process->getState() == Process::PROCESS_STATE::READY) {
             std::cout << "--\t";
         } else {
-            std::cout << "  \t";
+            std::cout << "XD\t";
         }
     }
     std::cout << std::endl;
 }
 
-FCFS::FCFS(std::vector<Process> processes) {
+FCFS::FCFS(std::vector<Process*> processes) {
     this->processes = processes;
-    // Sort processes by its start time
-    std::sort(this->processes.begin(), this->processes.end(), [](Process a, Process b) {
-        return a.getId() < b.getId();
-    });
 }
 
 

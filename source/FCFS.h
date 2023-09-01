@@ -11,14 +11,14 @@
 
 class FCFS {
 public:
-    explicit FCFS(std::vector <Process> processes);
+    explicit FCFS(std::vector <Process*> processes);
 
     void runScheduler();
 
 private:
-    std::vector <Process> processes;
+    std::vector <Process*> processes;
     std::vector <Process::ProcessStats> processesStats;
-    std::queue <Process> readyQueue = std::queue<Process>();
+    std::queue <Process*> readyQueue = std::queue<Process*>();
     ProcessContext workingContext = ProcessContext();
     int time = 0;
 
