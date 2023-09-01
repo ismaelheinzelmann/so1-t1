@@ -21,7 +21,15 @@ void FCFS::runScheduler() {
             if (!currentProcess->running()) {
                 currentProcess->finalize(time);
                 processesStats.push_back(currentProcess->getStats());
-                currentProcess = nullptr;
+                if (!readyQueue.empty()) {
+                    currentProcess = readyQueue.front();
+                    workingContext = currentProcess->getContext();
+                    currentProcess->schedule();
+                    currentProcess->run();
+                    readyQueue.pop();
+                } else {
+                    break;
+                }
             }
         } else {
             if (!readyQueue.empty()) {
@@ -41,12 +49,10 @@ void FCFS::runScheduler() {
 }
 
 void FCFS::verifyProcessesToCreate() {
-    for (auto it = processes.begin(); it != processes.end();) {
-        if ((*it)->getStartTime() == time) {
-            readyQueue.push(*it);
-            it = processes.erase(it);
-        } else {
-            ++it;
+    for (const auto &process: processes) {
+        if (process->getStartTime() == time) {
+            process->create();
+            readyQueue.push(process);
         }
     }
 }
@@ -67,10 +73,12 @@ void FCFS::printTimeline() {
         } else if (process->getState() == Process::PROCESS_STATE::READY) {
             std::cout << "--\t";
         } else {
-            std::cout << "XD\t";
+            std::cout << "  \t";
         }
     }
     std::cout << std::endl;
+    std::cout << std::endl;
+
 }
 
 FCFS::FCFS(std::vector<Process*> processes) {

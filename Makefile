@@ -27,7 +27,10 @@ $(BINDIR):
 clean:
 	rm -rf $(OBJDIR) $(BINDIR)
 
-run: clean all
+run: clean all input
 	./$(TARGET)
+
+input:
+	cp -f entrada.txt $(BINDIR)/input.txt
 
 .PHONY: all clean

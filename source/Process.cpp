@@ -10,7 +10,7 @@ Process::Process(int id, int startTime, int duration, int priority) {
     this->startTime = startTime;
     this->duration = duration;
     remainingTime = duration;
-    this->state = this->PROCESS_STATE::CREATED;
+    this->state = CREATED;
     lastStop = startTime;
 
     context = ProcessContext();
