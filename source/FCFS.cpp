@@ -13,38 +13,24 @@
 
 void FCFS::runScheduler() {
     printTimelineHeader();
-    Process *currentProcess = nullptr;
-    while (true) {
+
+    bool running = true;
+    do {
         verifyProcessesToCreate();
-        if (currentProcess != nullptr) {
-            currentProcess->run();
-            if (!currentProcess->running()) {
-                currentProcess->finalize(time);
-                processesStats.push_back(currentProcess->getStats());
-                if (!readyQueue.empty()) {
-                    currentProcess = readyQueue.front();
-                    workingContext = currentProcess->getContext();
-                    currentProcess->schedule();
-                    currentProcess->run();
-                    readyQueue.pop();
-                } else {
-                    break;
-                }
-            }
-        } else {
-            if (!readyQueue.empty()) {
-                currentProcess = readyQueue.front();
-                workingContext = currentProcess->getContext();
-                currentProcess->schedule();
-                currentProcess->run();
-                readyQueue.pop();
-            } else {
+        switch (state) {
+            case INITIALIZED:
+                initialize();
                 break;
-            }
+            case RUNNING:
+                run();
+                break;
+            case FINISHED:
+                running = false;
+                break;
         }
+        time++;
         printTimeline();
-        FCFS::time++;
-    }
+    } while (running);
     printProcessesStats();
 }
 
@@ -77,11 +63,10 @@ void FCFS::printTimeline() {
         }
     }
     std::cout << std::endl;
-    std::cout << std::endl;
 
 }
 
-FCFS::FCFS(std::vector<Process*> processes) {
+FCFS::FCFS(std::vector<Process *> processes) {
     this->processes = processes;
 }
 
@@ -92,5 +77,34 @@ void FCFS::printProcessesStats() {
         std::cout << processStats.id << "\t\t\t" << processStats.turnarroundTime << "\t\t\t" << processStats.waitingTime
                   << "\t\t\t"
                   << processStats.contextSwitches << std::endl;
+    }
+}
+
+void FCFS::initialize() {
+    if (!readyQueue.empty()) {
+        currentProcess = readyQueue.front();
+        readyQueue.pop();
+        workingContext = currentProcess->getContext();
+        currentProcess->schedule();
+        currentProcess->run();
+    }
+    state = RUNNING;
+}
+
+void FCFS::run() {
+    if (currentProcess->running()) {
+        currentProcess->run();
+        return;
+    }
+    currentProcess->finalize(time);
+    processesStats.push_back(currentProcess->getStats());
+    if (!readyQueue.empty()) {
+        currentProcess = readyQueue.front();
+        workingContext = currentProcess->getContext();
+        currentProcess->schedule();
+        currentProcess->run();
+        readyQueue.pop();
+    } else {
+        state = FINISHED;
     }
 }
