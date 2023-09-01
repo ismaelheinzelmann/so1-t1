@@ -3,7 +3,9 @@
 //
 
 #include "Process.h"
+#include <iostream>
 using namespace std;
+
 Process::Process(int id, int startTime, int duration, int priority) {
     this->id = id;
     this->priority = priority;
@@ -62,11 +64,10 @@ void Process::create() {
 
 void Process::schedule() {
     state = RUNNING;
-    contextSwitches++;
 }
 
 void Process::run() {
-    if (remainingTime > 0){
+    if (remainingTime > 0) {
         remainingTime--;
     } else {
         state = FINISHED;
@@ -75,7 +76,6 @@ void Process::run() {
 
 void Process::preempt() {
     state = READY;
-    contextSwitches++;
 }
 
 void Process::finalize(int time) {
@@ -94,6 +94,12 @@ Process::ProcessStats Process::getStats() {
     return stats;
 }
 
-ProcessContext Process::getContext() const {
+ProcessContext Process::getContext() {
+    contextSwitches++;
     return context;
+}
+
+void Process::setContext(ProcessContext processContext) {
+    contextSwitches++;
+    context = processContext;
 }

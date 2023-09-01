@@ -11,16 +11,30 @@
 
 class FCFS {
 public:
-    explicit FCFS(std::vector <Process*> processes);
+    explicit FCFS(std::vector<Process *> processes);
 
     void runScheduler();
 
 private:
-    std::vector <Process*> processes;
-    std::vector <Process::ProcessStats> processesStats;
-    std::queue <Process*> readyQueue = std::queue<Process*>();
+    enum SCHEDULER_STATES {
+        INITIALIZED,
+        RUNNING,
+        FINISHED
+    };
+    std::vector<Process *> processes;
+    std::vector<Process::ProcessStats> processesStats;
+    std::queue<Process *> readyQueue = std::queue<Process *>();
+
+    // Running process and its context
+    Process *currentProcess = nullptr;
     ProcessContext workingContext = ProcessContext();
+
+    SCHEDULER_STATES state = INITIALIZED;
     int time = 0;
+
+    void initialize();
+
+    void run();
 
     void verifyProcessesToCreate();
 

@@ -40,7 +40,9 @@ public:
 
     int getWaitingTime() const;
 
-    ProcessContext getContext() const;
+    ProcessContext getContext();
+
+    void setContext(ProcessContext processContext);
 
     void create();
 

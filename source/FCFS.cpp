@@ -13,37 +13,23 @@
 
 void FCFS::runScheduler() {
     printTimelineHeader();
-    Process *currentProcess = nullptr;
-    while (true) {
+
+    bool running = true;
+    while (running) {
         verifyProcessesToCreate();
-        if (currentProcess != nullptr) {
-            currentProcess->run();
-            if (!currentProcess->running()) {
-                currentProcess->finalize(time);
-                processesStats.push_back(currentProcess->getStats());
-                if (!readyQueue.empty()) {
-                    currentProcess = readyQueue.front();
-                    workingContext = currentProcess->getContext();
-                    currentProcess->schedule();
-                    currentProcess->run();
-                    readyQueue.pop();
-                } else {
-                    break;
-                }
-            }
-        } else {
-            if (!readyQueue.empty()) {
-                currentProcess = readyQueue.front();
-                workingContext = currentProcess->getContext();
-                currentProcess->schedule();
-                currentProcess->run();
-                readyQueue.pop();
-            } else {
+        switch (state) {
+            case INITIALIZED:
+                initialize();
                 break;
-            }
+            case RUNNING:
+                run();
+                break;
+            case FINISHED:
+                running = false;
+                break;
         }
+        time++;
         printTimeline();
-        FCFS::time++;
     }
     printProcessesStats();
 }
@@ -65,8 +51,9 @@ void FCFS::printTimelineHeader() {
     std::cout << std::endl;
 }
 
+// https://stackoverflow.com/questions/25918057/how-to-set-a-fixed-width-with-cout
 void FCFS::printTimeline() {
-    std::cout << time << "-" << time + 1 << "\t";
+//    std::cout << time << "-" << time + 1 << "\t";
     for (const auto &process: processes) {
         if (process->getState() == Process::PROCESS_STATE::RUNNING) {
             std::cout << "##\t";
@@ -77,20 +64,47 @@ void FCFS::printTimeline() {
         }
     }
     std::cout << std::endl;
-    std::cout << std::endl;
-
 }
 
-FCFS::FCFS(std::vector<Process*> processes) {
+FCFS::FCFS(std::vector<Process *> processes) {
     this->processes = processes;
 }
 
 
 void FCFS::printProcessesStats() {
-    std::cout << "Processo\tTurnaround\tWaiting\tContext Switches" << std::endl;
+    std::cout << "Processo\tTurnaround\tWaiting\t\tTroca de Contexto" << std::endl;
     for (const auto &processStats: processesStats) {
         std::cout << processStats.id << "\t\t\t" << processStats.turnarroundTime << "\t\t\t" << processStats.waitingTime
                   << "\t\t\t"
                   << processStats.contextSwitches << std::endl;
+    }
+}
+
+void FCFS::initialize() {
+    if (!readyQueue.empty()) {
+        currentProcess = readyQueue.front();
+        readyQueue.pop();
+        workingContext = currentProcess->getContext();
+        currentProcess->schedule();
+        currentProcess->run();
+    }
+    state = RUNNING;
+}
+
+void FCFS::run() {
+    currentProcess->run();
+    if (currentProcess->running()) {
+        return;
+    }
+    currentProcess->finalize(time);
+    processesStats.push_back(currentProcess->getStats());
+    if (!readyQueue.empty()) {
+        currentProcess = readyQueue.front();
+        readyQueue.pop();
+        workingContext = currentProcess->getContext();
+        currentProcess->schedule();
+        currentProcess->run();
+    } else {
+        state = FINISHED;
     }
 }
