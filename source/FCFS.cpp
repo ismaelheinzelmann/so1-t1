@@ -7,6 +7,7 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include <iomanip>
 #include "Process.h"
 #include "ProcessContext.h"
 #include "Register.h"
@@ -28,8 +29,8 @@ void FCFS::runScheduler() {
                 running = false;
                 break;
         }
-        time++;
         printTimeline();
+        time++;
     }
     printProcessesStats();
 }
@@ -53,7 +54,7 @@ void FCFS::printTimelineHeader() {
 
 // https://stackoverflow.com/questions/25918057/how-to-set-a-fixed-width-with-cout
 void FCFS::printTimeline() {
-//    std::cout << time << "-" << time + 1 << "\t";
+    std::cout << std::setw(2) << time << "-" << std::setw(2) << time + 1 << "\t";
     for (const auto &process: processes) {
         if (process->getState() == Process::PROCESS_STATE::RUNNING) {
             std::cout << "##\t";
@@ -69,7 +70,6 @@ void FCFS::printTimeline() {
 FCFS::FCFS(std::vector<Process *> processes) {
     this->processes = processes;
 }
-
 
 void FCFS::printProcessesStats() {
     std::cout << "Processo\tTurnaround\tWaiting\t\tTroca de Contexto" << std::endl;
