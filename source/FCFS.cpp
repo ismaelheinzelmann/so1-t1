@@ -3,36 +3,30 @@
 //
 
 #include "FCFS.h"
-#include <utility>
 #include <vector>
-#include <algorithm>
 #include <iostream>
 #include <iomanip>
 #include "Process.h"
-#include "ProcessContext.h"
-#include "Register.h"
 
 void FCFS::runScheduler() {
     printTimelineHeader();
-
-    bool running = true;
-    while (running) {
+    while (true) {
         verifyProcessesToCreate();
         switch (state) {
             case INITIALIZED:
+                printTimeline();
                 initialize();
                 break;
             case RUNNING:
+                printTimeline();
                 run();
                 break;
             case FINISHED:
-                running = false;
-                break;
+                printProcessesStats();
+                return;
         }
-        printTimeline();
         time++;
     }
-    printProcessesStats();
 }
 
 void FCFS::verifyProcessesToCreate() {
