@@ -14,6 +14,7 @@ all: $(TARGET)
 
 $(TARGET): $(OBJDIR) $(BINDIR) $(OBJECTS) main.cpp
 	$(CXX) $(CXXFLAGS) main.cpp $(OBJECTS) -o $(TARGET)
+	cp -f entrada.txt $(BINDIR)/entrada.txt
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@

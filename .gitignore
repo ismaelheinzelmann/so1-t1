@@ -36,3 +36,6 @@ build/
 **/*.tar.gz
 bin/
 obj/
+
+# IntelliJ
+.idea/

@@ -8,25 +8,26 @@
 #include <vector>
 #include <queue>
 #include "Process.h"
+#include "Scheduler.h"
 
-class FCFS {
+class FCFS : public Scheduler {
 public:
-    explicit FCFS(std::vector <Process*> processes);
+    explicit FCFS(std::vector<Process *> processes);
 
-    void runScheduler();
+    void runScheduler() override;
 
 private:
-    std::vector <Process*> processes;
-    std::vector <Process::ProcessStats> processesStats;
-    std::queue <Process*> readyQueue = std::queue<Process*>();
-    ProcessContext workingContext = ProcessContext();
-    int time = 0;
+    std::queue<Process *> readyQueue = std::queue<Process *>();
 
-    void verifyProcessesToCreate();
+    void initialize() override;
 
-    void printTimelineHeader();
+    void run() override ;
 
-    void printTimeline();
+    void verifyProcessesToCreate() override;
+
+    void printTimelineHeader() override;
+
+    void printTimeline() override;
 
     void printProcessesStats();
 };
