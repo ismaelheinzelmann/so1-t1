@@ -1,6 +1,7 @@
 #include "source/Process.h"
 #include <iostream>
 #include "source/FCFS.h"
+#include "source/SJF.h"
 
 int main() {
     auto *p1 = new Process(1, 0, 5, 2);
@@ -9,6 +10,6 @@ int main() {
     auto *p4 = new Process(4, 3, 3, 4);
     std::vector<Process *> processes = {p1, p2, p3, p4};
 
-    FCFS scheduler = FCFS(processes);
+    SJF scheduler = SJF(processes);
     scheduler.runScheduler();
 }
