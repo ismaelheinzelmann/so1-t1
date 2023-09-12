@@ -2,17 +2,17 @@
 // Created by novais 10/09/23.
 //
 
-#ifndef SO1_T1_PSP_H
-#define SO1_T1_PSP_H
+#ifndef SO1_T1_PCP_H
+#define SO1_T1_PCP_H
 
 #include <vector>
 #include <list>
 #include "Process.h"
 #include "Scheduler.h"
 
-class PSP : public Scheduler {
+class PCP : public Scheduler {
 public:
-    explicit PSP(std::vector<Process *> processes);
+    explicit PCP(std::vector<Process *> processes);
 
     void runScheduler() override;
 
@@ -32,4 +32,4 @@ private:
     void printProcessesStats();
 };
 
-#endif //SO1_T1_PSP_H
+#endif //SO1_T1_PCP_H

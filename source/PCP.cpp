@@ -2,7 +2,7 @@
 // Created by novais 10/09/23.
 //
 
-#include "PSP.h"
+#include "PCP.h"
 #include <vector>
 #include <iostream>
 #include <iomanip>
@@ -12,7 +12,7 @@ bool comparePriority(Process* a, Process* b){
     return a->getPriority() < b->getPriority();
 }
 
-void PSP::verifyProcessesToCreate() {
+void PCP::verifyProcessesToCreate() {
     for (const auto &process: processes) {
         if (process->getStartTime() == time) {
             process->create();
@@ -22,12 +22,12 @@ void PSP::verifyProcessesToCreate() {
     }
 }
 
-PSP::PSP(std::vector<Process *> processes) {
+PCP::PCP(std::vector<Process *> processes) {
     this->processes = processes;
 }
 
 
-void PSP::initialize() {
+void PCP::initialize() {
     if (!readyList.empty()) {
         currentProcess = readyList.front();
         readyList.pop_front();
@@ -38,7 +38,7 @@ void PSP::initialize() {
     state = RUNNING;
 }
 
-void PSP::run() {
+void PCP::run() {
     currentProcess->run();
     if (currentProcess->running()) {
         return;
@@ -56,18 +56,18 @@ void PSP::run() {
     }
 }
 
-void PSP::runScheduler() {
+void PCP::runScheduler() {
     Scheduler::runScheduler();
 }
 
-void PSP::printTimelineHeader() {
+void PCP::printTimelineHeader() {
     Scheduler::printTimelineHeader();
 }
 
-void PSP::printTimeline() {
+void PCP::printTimeline() {
     Scheduler::printTimeline();
 }
 
-void PSP::printProcessesStats() {
+void PCP::printProcessesStats() {
     Scheduler::printProcessesStats();
 }
