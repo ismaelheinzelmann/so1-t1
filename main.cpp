@@ -1,6 +1,7 @@
 #include "source/Process.h"
 #include <iostream>
 #include "source/FCFS.h"
+#include "source/PCP.h"
 #include "source/SJF.h"
 #include "source/PSP.h"
 
@@ -10,5 +11,7 @@ int main() {
     auto *p3 = new Process(3, 1, 4, 1);
     auto *p4 = new Process(4, 3, 3, 4);
     std::vector<Process *> processes = {p1, p2, p3, p4};
+
+    PCP scheduler = PCP(processes);
     scheduler.runScheduler();
 }
