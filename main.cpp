@@ -2,6 +2,8 @@
 #include <iostream>
 #include "source/FCFS.h"
 #include "source/PCP.h"
+#include "source/SJF.h"
+#include "source/PSP.h"
 
 int main() {
     auto *p1 = new Process(1, 0, 5, 2);
