@@ -8,8 +8,8 @@
 #include <iomanip>
 #include "Process.h"
 
-bool comparePriority(Process* a, Process* b){
-    return a->getPriority() < b->getPriority();
+bool PCP::comparePriority(Process* a, Process* b){
+    return a->getPriority() > b->getPriority();
 }
 
 void PCP::verifyProcessesToCreate() {
@@ -40,12 +40,24 @@ void PCP::initialize() {
 
 void PCP::run() {
     currentProcess->run();
+    if (!readyList.empty() && currentProcess->getPriority() < readyList.front()->getPriority()) {
+        currentProcess->preempt();
+        readyList.push_back(currentProcess);
+        readyList.sort(comparePriority);
+        currentProcess = readyList.front();
+        readyList.pop_front();
+        workingContext = currentProcess->getContext();
+        currentProcess->schedule();
+        currentProcess->run();
+        return;
+    }
     if (currentProcess->running()) {
         return;
     }
     currentProcess->finalize(time);
     processesStats.push_back(currentProcess->getStats());
     if (!readyList.empty()) {
+        readyList.sort(comparePriority);
         currentProcess = readyList.front();
         readyList.pop_front();
         workingContext = currentProcess->getContext();
