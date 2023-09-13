@@ -43,6 +43,7 @@ void PCP::run() {
     if (!readyList.empty() && currentProcess->getPriority() < readyList.front()->getPriority()) {
         currentProcess->preempt();
         readyList.push_back(currentProcess);
+        readyList.sort(comparePriority);
         currentProcess = readyList.front();
         readyList.pop_front();
         workingContext = currentProcess->getContext();
@@ -56,6 +57,7 @@ void PCP::run() {
     currentProcess->finalize(time);
     processesStats.push_back(currentProcess->getStats());
     if (!readyList.empty()) {
+        readyList.sort(comparePriority);
         currentProcess = readyList.front();
         readyList.pop_front();
         workingContext = currentProcess->getContext();
