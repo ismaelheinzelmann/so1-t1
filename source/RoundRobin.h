@@ -5,6 +5,7 @@
 
 #ifndef SO1_T1_ROUNDROBIN_H
 #define SO1_T1_ROUNDROBIN_H
+
 #include "Scheduler.h"
 #include "Process.h"
 #include <vector>
@@ -23,7 +24,15 @@ private:
 
     void initialize() override;
 
-    void run() override ;
+    void preemptProcess(Process *process);
+
+    void scheduleProcess(Process *process);
+
+    void finalizeProcess(Process *process);
+
+    void scheduleNextProcess();
+
+    void run() override;
 
     void verifyProcessesToCreate() override;
 
