@@ -19,10 +19,9 @@ public:
 private:
     std::list<Process *> readyList = std::list<Process *>();
     int quantum = 2;
+    int currentQuantum = 0;
 
     void initialize() override;
-
-    bool static comparePriority(Process* a, Process* b);
 
     void run() override ;
 
@@ -32,7 +31,7 @@ private:
 
     void printTimeline() override;
 
-    void printProcessesStats();
+    void printProcessesStats() override;
 };
 
 #endif //SO1_T1_ROUNDROBIN_H

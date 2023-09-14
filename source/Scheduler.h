@@ -7,6 +7,9 @@
 
 #include <iostream>
 #include <iomanip>
+#include <vector>
+#include "Process.h"
+#include "ProcessContext.h"
 
 class Scheduler {
 

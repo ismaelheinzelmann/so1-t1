@@ -1,86 +1,51 @@
-//
-// Created by ismael on 12/09/23.
-//
-
 #include "RoundRobin.h"
+#include "Process.h"
 
 RoundRobin::RoundRobin(std::vector<Process *> processes) {
     this->processes = processes;
 }
 
 void RoundRobin::initialize() {
-    this->readyList = std::list<Process *>();
-    this->readyList.insert(this->readyList.end(), this->processes.begin(), this->processes.end());
-    this->readyList.sort(RoundRobin::comparePriority);
-}
-
-void RoundRobin::runScheduler() {
-    this->printTimelineHeader();
-    this->run();
-    this->printProcessesStats();
-}
-
-void RoundRobin::run() {
-    while (!this->readyList.empty()) {
-        for (auto &process : this->readyList) {
-            if (this->currentProcess == nullptr){
-                this->currentProcess = process;
-                this->workingContext = this->currentProcess->getContext();
-                this->currentProcess->schedule();
-                this->currentProcess->run();
-                if (this->currentProcess->running()) {
-                    continue;
-                } else {
-
-                }
-            } else {
-                currentProcess->setContext(this->workingContext);
-                currentProcess->preempt();
-                this->currentProcess = process;
-                this->workingContext = this->currentProcess->getContext();
-            }
-        }
+    if (!readyList.empty()) {
+        currentProcess = readyList.front();
+        readyList.pop_front();
+        workingContext = currentProcess->getContext();
+        currentProcess->schedule();
+        currentProcess->run();
+        state = RUNNING;
     }
 }
 
-bool RoundRobin::comparePriority(Process *a, Process *b) {
-    return a->getPriority() < b->getPriority();
+void RoundRobin::run() {
+    if (processes.size() == processesStats.size()){
+        state = FINISHED;
+        return;
+    }
+    
+
 }
 
 void RoundRobin::verifyProcessesToCreate() {
     for (auto &process : this->processes) {
-        if (process->getArrivalTime() == this->currentTime) {
+        if (process->getStartTime() == this->time) {
             this->readyList.push_back(process);
         }
     }
 }
 
+
 void RoundRobin::printTimelineHeader() {
-    std::cout << "Round Robin" << std::endl;
-    std::cout << "Quantum: " << this->quantum << std::endl;
-    std::cout << "Time\t";
-    for (auto &process : this->processes) {
-        std::cout << "P" << process->getId() << "\t";
-    }
-    std::cout << std::endl;
+    Scheduler::printTimelineHeader();
 }
 
 void RoundRobin::printTimeline() {
-    std::cout << this->currentTime << "\t";
-    for (auto &process : this->processes) {
-        if (process->getStartTime() <= this->currentTime && process->getEndTime() > this->currentTime) {
-            std::cout << "X\t";
-        } else {
-            std::cout << "\t";
-        }
-    }
-    std::cout << std::endl;
+    Scheduler::printTimeline();
 }
 
 void RoundRobin::printProcessesStats() {
-    std::cout << "Process\tTurnaround Time\tWaiting Time" << std::endl;
-    for (auto &process : this->processes) {
-        std::cout << "P" << process->getId() << "\t" << process->getTurnaroundTime() << "\t\t\t" << process->getWaitingTime() << std::endl;
-    }
+    Scheduler::printProcessesStats();
 }
 
+void RoundRobin::runScheduler() {
+    Scheduler::runScheduler();
+}
