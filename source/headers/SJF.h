@@ -6,13 +6,16 @@
 #define SO1_T1_SJF_H
 
 #include <list>
+#include <utility>
 #include <vector>
 #include "Process.h"
 #include "Scheduler.h"
 
 class SJF : public Scheduler {
 public:
-    explicit SJF(std::vector<Process *> processes);
+    explicit SJF(std::vector<Process *> processes){
+        this->processes = std::move(processes);
+    }
 
     void runScheduler() override;
 

@@ -1,10 +1,5 @@
 #include "../headers/RoundRobin.h"
-#include "../headers/Process.h"
-#include <iostream>
 
-RoundRobin::RoundRobin(std::vector<Process *> processes) {
-    this->processes = processes;
-}
 
 void RoundRobin::initialize() {
     if (!readyList.empty()) {

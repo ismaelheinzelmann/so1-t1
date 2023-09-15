@@ -12,7 +12,9 @@
 
 class PSP : public Scheduler {
 public:
-    explicit PSP(std::vector<Process *> processes);
+    explicit PSP(std::vector<Process *> processes){
+        this->processes = std::move(processes);
+    }
 
     void runScheduler() override;
 

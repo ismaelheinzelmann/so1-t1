@@ -3,10 +3,7 @@
 //
 
 #include "../headers/PCP.h"
-#include <vector>
 #include <iostream>
-#include <iomanip>
-#include "../headers/Process.h"
 
 bool PCP::comparePriority(Process* a, Process* b){
     return a->getPriority() < b->getPriority();
@@ -22,11 +19,6 @@ void PCP::verifyProcessesToCreate() {
     }
 }
 
-PCP::PCP(std::vector<Process *> processes) {
-    this->processes = processes;
-}
-
-
 void PCP::initialize() {
     if (!readyList.empty()) {
         currentProcess = readyList.front();
@@ -39,6 +31,7 @@ void PCP::initialize() {
 }
 
 void PCP::run() {
+    std::cout<<"TIME "<<time<<std::endl;
     currentProcess->run();
     if (currentProcess->isRunning()) {
         return;

@@ -12,7 +12,9 @@
 
 class PCP : public Scheduler {
 public:
-    explicit PCP(std::vector<Process *> processes);
+    explicit PCP(std::vector<Process *> processes){
+        this->processes = std::move(processes);
+    }
 
     void runScheduler() override;
 
