@@ -31,25 +31,33 @@ void SJF::initialize() {
 }
 
 void SJF::run() {
-    currentProcess->run();
-    if (currentProcess->isRunning()) {
-        return;
-    }
-    currentProcess->finalize(time);
-    processesStats.push_back(currentProcess->getStats());
-    if (!readyList.empty()) {
-        currentProcess = readyList.front();
-        readyList.pop_front();
-        workingContext = currentProcess->getContext();
-        currentProcess->schedule();
-        currentProcess->run();
-    } else {
-        state = FINISHED;
-    }
+    ;
 }
 
 void SJF::runScheduler() {
-    Scheduler::runScheduler();
+    printTimelineHeader();
+    verifyProcessesToCreate();
+    while (processes.size() != processesStats.size()) {
+        if (readyList.empty()) {
+            printTimeline();
+            time++;
+            verifyProcessesToCreate();
+            continue;
+        }
+        currentProcess = readyList.front();
+        readyList.pop_front();
+        currentProcess->schedule();
+        workingContext = currentProcess->getContext();
+        for (int i = 0; i < currentProcess->getDuration(); ++i) {
+            currentProcess->run();
+            printTimeline();
+            time++;
+            verifyProcessesToCreate();
+        }
+        currentProcess->finalize(time);
+        processesStats.push_back(currentProcess->getStats());
+    }
+    printProcessesStats();
 }
 
 void SJF::printTimelineHeader() {
