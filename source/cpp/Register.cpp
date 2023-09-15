@@ -2,7 +2,7 @@
 // Created by ismael on 29/08/23.
 //
 #include <array>
-#include "Register.h"
+#include "../headers/Register.h"
 
 Register::Register() {
     content = std::array<unsigned char, 8>();

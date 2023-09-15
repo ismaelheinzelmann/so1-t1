@@ -1,5 +1,5 @@
-#include "RoundRobin.h"
-#include "Process.h"
+#include "../headers/RoundRobin.h"
+#include "../headers/Process.h"
 #include <iostream>
 
 RoundRobin::RoundRobin(std::vector<Process *> processes) {

@@ -1,36 +1,31 @@
 //
-// Created by novais 10/09/23.
+// Created by ismael on 31/08/23.
 //
 
-#include "PCP.h"
+#include "../headers/FCFS.h"
 #include <vector>
 #include <iostream>
 #include <iomanip>
-#include "Process.h"
+#include "../headers/Process.h"
 
-bool comparePriority(Process* a, Process* b){
-    return a->getPriority() < b->getPriority();
-}
-
-void PCP::verifyProcessesToCreate() {
+void FCFS::verifyProcessesToCreate() {
     for (const auto &process: processes) {
         if (process->getStartTime() == time) {
             process->create();
-            readyList.push_front(process);
-            readyList.sort(comparePriority);
+            readyQueue.push(process);
         }
     }
 }
 
-PCP::PCP(std::vector<Process *> processes) {
+FCFS::FCFS(std::vector<Process *> processes) {
     this->processes = processes;
 }
 
 
-void PCP::initialize() {
-    if (!readyList.empty()) {
-        currentProcess = readyList.front();
-        readyList.pop_front();
+void FCFS::initialize() {
+    if (!readyQueue.empty()) {
+        currentProcess = readyQueue.front();
+        readyQueue.pop();
         workingContext = currentProcess->getContext();
         currentProcess->schedule();
         currentProcess->run();
@@ -38,16 +33,16 @@ void PCP::initialize() {
     state = RUNNING;
 }
 
-void PCP::run() {
+void FCFS::run() {
     currentProcess->run();
     if (currentProcess->isRunning()) {
         return;
     }
     currentProcess->finalize(time);
     processesStats.push_back(currentProcess->getStats());
-    if (!readyList.empty()) {
-        currentProcess = readyList.front();
-        readyList.pop_front();
+    if (!readyQueue.empty()) {
+        currentProcess = readyQueue.front();
+        readyQueue.pop();
         workingContext = currentProcess->getContext();
         currentProcess->schedule();
         currentProcess->run();
@@ -56,18 +51,18 @@ void PCP::run() {
     }
 }
 
-void PCP::runScheduler() {
+void FCFS::runScheduler() {
     Scheduler::runScheduler();
 }
 
-void PCP::printTimelineHeader() {
+void FCFS::printTimelineHeader() {
     Scheduler::printTimelineHeader();
 }
 
-void PCP::printTimeline() {
+void FCFS::printTimeline() {
     Scheduler::printTimeline();
 }
 
-void PCP::printProcessesStats() {
+void FCFS::printProcessesStats() {
     Scheduler::printProcessesStats();
 }

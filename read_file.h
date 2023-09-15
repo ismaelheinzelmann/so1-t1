@@ -31,11 +31,10 @@ public:
     int getPriority() const {
         return priority;
     }
-    
+
     int getCreationTime() const {
         return creation_time;
     }
-
 
 
 private:

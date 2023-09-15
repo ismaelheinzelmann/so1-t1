@@ -1,11 +1,11 @@
-#include "source/Process.h"
+#include "source/headers/Process.h"
 #include "read_file.h"
 #include <iostream>
-#include "source/RoundRobin.h"
-#include "source/SJF.h"
-#include "source/FCFS.h"
-#include "source/PSP.h"
-#include "source/PCP.h"
+#include "source/headers/RoundRobin.h"
+#include "source/headers/SJF.h"
+#include "source/headers/FCFS.h"
+#include "source/headers/PSP.h"
+#include "source/headers/PCP.h"
 
 int main() {
     std::cout << "Bem vindo ao simulador de escalonamento de processos." << std::endl;
@@ -20,7 +20,7 @@ int main() {
     f.read_file();
     std::vector<Process *> processes;
 
-    int i = 0;
+    int i = 1;
     for (auto &p: f.get_processes()) {
         auto *newProcess = new Process(i, p->getCreationTime(), p->getDuration(), p->getPriority());
         processes.push_back(newProcess);

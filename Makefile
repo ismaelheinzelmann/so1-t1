@@ -1,7 +1,7 @@
 CXX := g++
 CXXFLAGS := -std=c++11 -Wall -Wextra
 
-SRCDIR := source
+SRCDIR := source/cpp
 OBJDIR := obj
 BINDIR := bin
 

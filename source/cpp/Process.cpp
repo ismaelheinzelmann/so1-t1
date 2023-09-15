@@ -2,7 +2,7 @@
 // Created by ismael on 31/08/23.
 //
 
-#include "Process.h"
+#include "../headers/Process.h"
 #include <iostream>
 using namespace std;
 
