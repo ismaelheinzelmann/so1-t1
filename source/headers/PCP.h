@@ -19,6 +19,8 @@ public:
 private:
     std::list<Process *> readyList = std::list<Process *>();
 
+    static bool comparePriority(Process* a, Process* b);
+
     void initialize() override;
 
     void run() override ;

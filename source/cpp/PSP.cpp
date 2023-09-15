@@ -9,7 +9,7 @@
 #include "../headers/Process.h"
 
 bool PSP::comparePriority(Process* a, Process* b){
-    return a->getPriority() < b->getPriority();
+    return a->getPriority() > b->getPriority();
 }
 
 void PSP::verifyProcessesToCreate() {
