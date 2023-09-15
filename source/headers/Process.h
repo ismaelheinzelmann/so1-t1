@@ -9,12 +9,16 @@
 
 class Process {
 public:
+
+    /// Enum com os estados possíveis de um processo
     enum PROCESS_STATE {
         CREATED,
         READY,
         RUNNING,
         FINISHED
     };
+
+    /// Struct com as estatísticas de um processo, como tempo de retorno, tempo de espera e número de trocas de contexto
     typedef struct ProcessStats {
         int id;
         int turnarroundTime;
@@ -66,14 +70,11 @@ private:
     int startTime;
     int duration;
     int remainingTime;
-    int lastStop;
     int turnarroundTime;
     PROCESS_STATE state;
     ProcessContext context;
     ProcessStats stats;
     int contextSwitches = 0;
-
-    void updatePriorityLevel();
 };
 
 

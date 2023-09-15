@@ -13,7 +13,6 @@ Process::Process(int id, int startTime, int duration, int priority) {
     this->duration = duration;
     remainingTime = duration;
     this->state = CREATED;
-    lastStop = startTime;
 
     context = ProcessContext();
 }

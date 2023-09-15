@@ -66,7 +66,7 @@ protected:
             averageWaitingTime += processStats.waitingTime;
         }
         averageWaitingTime /= processesStats.size();
-        std::cout << "Tempo médio de espera: " << averageWaitingTime << std::endl;
+        std::cout << "Tempo médio de espera: " << averageWaitingTime << " segundos."<< std::endl;
     }
 
     int time = 0;

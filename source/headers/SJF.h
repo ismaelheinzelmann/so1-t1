@@ -17,6 +17,16 @@ public:
         this->processes = std::move(processes);
     }
 
+    /**
+     * @brief Método que executa o escalonador Shortest Job First.
+     *
+     * O método executa o escalonador Shortest Job First. O escalonador não é preemptivo, ou seja, os processos
+     * são executados até serem finalizados.
+     * O escalonamento é feito de acordo com tempo de execução de cada processo, ou seja, o processo com menor tempo de execução
+     * é executado primeiro. Caso existam processos com o mesmo tempo de execução, o escalonador executa os processos de acordo
+     * com a ordem de chegada.
+     *
+     */
     void runScheduler() override;
 
 private:
