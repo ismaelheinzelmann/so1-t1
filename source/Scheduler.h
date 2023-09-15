@@ -14,25 +14,6 @@
 class Scheduler {
 
 protected:
-    virtual void runScheduler() {
-        printTimelineHeader();
-        while (true) {
-            verifyProcessesToCreate();
-            switch (state) {
-                case INITIALIZED:
-                    initialize();
-                    break;
-                case RUNNING:
-                    printTimeline();
-                    run();
-                    break;
-                case FINISHED:
-                    printProcessesStats();
-                    return;
-            }
-            time++;
-        }
-    }
 
     virtual void verifyProcessesToCreate() = 0;
 
@@ -85,6 +66,26 @@ protected:
     ProcessContext workingContext = ProcessContext();
     std::vector<Process::ProcessStats> processesStats;
 
+public:
+    virtual void runScheduler() {
+        printTimelineHeader();
+        while (true) {
+            verifyProcessesToCreate();
+            switch (state) {
+                case INITIALIZED:
+                    initialize();
+                    break;
+                case RUNNING:
+                    printTimeline();
+                    run();
+                    break;
+                case FINISHED:
+                    printProcessesStats();
+                    return;
+            }
+            time++;
+        }
+    }
 };
 
 #endif //SO1_T1_SCHEDULER_H

@@ -32,6 +32,6 @@ run: clean all input
 	./$(TARGET)
 
 input:
-	cp -f entrada.txt $(BINDIR)/input.txt
+	cp -f entrada.txt $(BINDIR)/entrada.txt
 
 .PHONY: all clean
