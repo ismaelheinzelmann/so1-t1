@@ -19,7 +19,7 @@ public:
 
 private:
     std::list<Process *> readyList = std::list<Process *>();
-    int quantum = 3;
+    int quantum = 2;
 
     void initialize() override;
 
