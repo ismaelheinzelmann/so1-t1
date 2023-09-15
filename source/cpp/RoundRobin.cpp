@@ -1,13 +1,5 @@
 #include "../headers/RoundRobin.h"
 
-
-void RoundRobin::initialize() {
-    if (!readyList.empty()) {
-        scheduleNextProcess();
-        state = RUNNING;
-    }
-}
-
 void RoundRobin::preemptCurrentProcess() {
     currentProcess->preempt();
     currentProcess->setContext(workingContext);

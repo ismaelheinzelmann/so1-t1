@@ -20,8 +20,8 @@ public:
             delete process;
         }
     }
-protected:
 
+protected:
 
     virtual void verifyProcessesToCreate() = 0;
 
@@ -47,12 +47,7 @@ protected:
         std::cout << std::endl;
     }
 
-    virtual void initialize() = 0;
-
-    virtual void run() = 0;
-
     virtual void printProcessesStats() {
-        //sort processStats by id
         std::sort(processesStats.begin(), processesStats.end(),
                   [](const Process::ProcessStats &a, const Process::ProcessStats &b) -> bool {
                       return a.id < b.id;
@@ -74,13 +69,6 @@ protected:
         std::cout << "Tempo médio de espera: " << averageWaitingTime << std::endl;
     }
 
-    enum SCHEDULER_STATES {
-        INITIALIZED,
-        RUNNING,
-        FINISHED
-    };
-
-    SCHEDULER_STATES state = INITIALIZED;
     int time = 0;
     std::vector<Process *> processes;
     Process *currentProcess = nullptr;
@@ -88,25 +76,7 @@ protected:
     std::vector<Process::ProcessStats> processesStats;
 
 public:
-    virtual void runScheduler() {
-        printTimelineHeader();
-        while (true) {
-            verifyProcessesToCreate();
-            switch (state) {
-                case INITIALIZED:
-                    initialize();
-                    break;
-                case RUNNING:
-                    printTimeline();
-                    run();
-                    break;
-                case FINISHED:
-                    printProcessesStats();
-                    return;
-            }
-            time++;
-        }
-    }
+    virtual void runScheduler() = 0;
 };
 
 #endif //SO1_T1_SCHEDULER_H

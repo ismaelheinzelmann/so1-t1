@@ -5,7 +5,7 @@
 
 #ifndef SO1_T1_ROUNDROBIN_H
 #define SO1_T1_ROUNDROBIN_H
-
+#define QUANTUM 2
 #include "Scheduler.h"
 #include "Process.h"
 #include <vector>
@@ -21,9 +21,7 @@ public:
 
 private:
     std::list<Process *> readyList = std::list<Process *>();
-    int quantum = 2;
-
-    void initialize() override;
+    int quantum = QUANTUM;
 
     void preemptCurrentProcess();
 
@@ -32,8 +30,6 @@ private:
     void finalizeProcess(Process *process);
 
     void scheduleNextProcess();
-
-    void run() override{};
 
     void verifyProcessesToCreate() override;
 

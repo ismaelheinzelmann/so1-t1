@@ -14,34 +14,6 @@ void FCFS::verifyProcessesToCreate() {
     }
 }
 
-void FCFS::initialize() {
-    if (!readyQueue.empty()) {
-        currentProcess = readyQueue.front();
-        readyQueue.pop();
-        workingContext = currentProcess->getContext();
-        currentProcess->schedule();
-        state = RUNNING;
-    }
-}
-
-void FCFS::run() {
-    if (currentProcess->isOver()) {
-        currentProcess->finalize(time);
-        processesStats.push_back(currentProcess->getStats());
-        if (!readyQueue.empty()) {
-            currentProcess = readyQueue.front();
-            readyQueue.pop();
-            workingContext = currentProcess->getContext();
-            currentProcess->schedule();
-            currentProcess->run();
-        } else {
-            state = FINISHED;
-        }
-    } else {
-        currentProcess->run();
-    }
-}
-
 void FCFS::runScheduler() {
     printTimelineHeader();
     verifyProcessesToCreate();

@@ -23,20 +23,6 @@ void PSP::verifyProcessesToCreate() {
     }
 }
 
-void PSP::initialize() {
-    if (!readyList.empty()) {
-        currentProcess = readyList.front();
-        readyList.pop_front();
-        workingContext = currentProcess->getContext();
-        currentProcess->schedule();
-        currentProcess->run();
-    }
-}
-
-void PSP::run() {
-    ;
-}
-
 void PSP::runScheduler() {
     printTimelineHeader();
     verifyProcessesToCreate();

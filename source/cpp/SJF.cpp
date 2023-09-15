@@ -19,21 +19,6 @@ void SJF::verifyProcessesToCreate() {
     }
 }
 
-void SJF::initialize() {
-    if (!readyList.empty()) {
-        currentProcess = readyList.front();
-        readyList.pop_front();
-        workingContext = currentProcess->getContext();
-        currentProcess->schedule();
-        currentProcess->run();
-    }
-    state = RUNNING;
-}
-
-void SJF::run() {
-    ;
-}
-
 void SJF::runScheduler() {
     printTimelineHeader();
     verifyProcessesToCreate();

@@ -21,17 +21,13 @@ public:
 private:
     std::queue<Process *> readyQueue = std::queue<Process *>();
 
-    void initialize() override;
-
-    void run() override ;
-
     void verifyProcessesToCreate() override;
 
     void printTimelineHeader() override;
 
     void printTimeline() override;
 
-    void printProcessesStats();
+    void printProcessesStats() override;
 };
 
 #endif //SO1_T1_FCFS_H

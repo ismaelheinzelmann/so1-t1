@@ -21,11 +21,7 @@ public:
 private:
     std::list<Process *> readyList = std::list<Process *>();
 
-    void initialize() override;
-
     bool static comparePriority(Process* a, Process* b);
-
-    void run() override ;
 
     void verifyProcessesToCreate() override;
 

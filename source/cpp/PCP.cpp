@@ -7,7 +7,7 @@
 #include <iostream>
 #include <iomanip>
 
-bool PCP::comparePriority(Process* a, Process* b){
+bool PCP::comparePriority(Process *a, Process *b) {
     return a->getPriority() > b->getPriority();
 }
 
@@ -21,20 +21,6 @@ void PCP::verifyProcessesToCreate() {
     }
 }
 
-void PCP::initialize() {
-    if (!readyList.empty()) {
-        currentProcess = readyList.front();
-        readyList.pop_front();
-        workingContext = currentProcess->getContext();
-        currentProcess->schedule();
-        currentProcess->run();
-    }
-    state = RUNNING;
-}
-
-void PCP::run() {
-    ;
-}
 
 void PCP::runScheduler() {
     printTimelineHeader();
@@ -50,22 +36,25 @@ void PCP::runScheduler() {
         readyList.pop_front();
         currentProcess->schedule();
         workingContext = currentProcess->getContext();
-
-        for (int i = 0; i < currentProcess->getDuration(); ++i) {
-            if (currentProcess->getPriority() < readyList.front()->getPriority()){
-                currentProcess->preempt();
-                currentProcess->setContext(workingContext);
-                readyList.push_back(currentProcess);
-                readyList.sort(comparePriority);
-                currentProcess = nullptr;
+        for (int i = 0; i < currentProcess->getDuration(); i++) {
+            if (currentProcess->isOver()){
                 break;
+            }
+            if (!readyList.empty()) {
+                if (currentProcess->getPriority() < readyList.front()->getPriority()) {
+                    currentProcess->preempt();
+                    currentProcess->setContext(workingContext);
+                    readyList.push_back(currentProcess);
+                    readyList.sort(comparePriority);
+                    break;
+                }
             }
             currentProcess->run();
             printTimeline();
             time++;
             verifyProcessesToCreate();
         }
-        if (currentProcess->isOver()){
+        if (currentProcess->isOver()) {
             currentProcess->finalize(time);
             processesStats.push_back(currentProcess->getStats());
         }

@@ -12,7 +12,7 @@
 
 class PCP : public Scheduler {
 public:
-    explicit PCP(std::vector<Process *> processes){
+    explicit PCP(std::vector<Process *> processes) {
         this->processes = std::move(processes);
     }
 
@@ -21,11 +21,7 @@ public:
 private:
     std::list<Process *> readyList = std::list<Process *>();
 
-    static bool comparePriority(Process* a, Process* b);
-
-    void initialize() override;
-
-    void run() override ;
+    static bool comparePriority(Process *a, Process *b);
 
     void verifyProcessesToCreate() override;
 
@@ -33,7 +29,7 @@ private:
 
     void printTimeline() override;
 
-    void printProcessesStats();
+    void printProcessesStats() override;
 };
 
 #endif //SO1_T1_PCP_H
