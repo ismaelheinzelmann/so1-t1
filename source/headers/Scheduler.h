@@ -64,6 +64,14 @@ protected:
                       << "\t\t\t"
                       << processStats.contextSwitches << std::endl;
         }
+        std::cout << std::endl;
+        float averageWaitingTime = 0;
+        //sum all waiting times and divide by number of processes
+        for (const auto &processStats: processesStats) {
+            averageWaitingTime += processStats.waitingTime;
+        }
+        averageWaitingTime /= processesStats.size();
+        std::cout << "Tempo médio de espera: " << averageWaitingTime << std::endl;
     }
 
     enum SCHEDULER_STATES {

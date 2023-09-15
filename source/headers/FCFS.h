@@ -12,7 +12,9 @@
 
 class FCFS : public Scheduler {
 public:
-    explicit FCFS(std::vector<Process *> processes);
+    explicit FCFS(std::vector<Process *> processes){
+        this->processes = std::move(processes);
+    }
 
     void runScheduler() override;
 

@@ -3,10 +3,7 @@
 //
 
 #include "../headers/FCFS.h"
-#include <vector>
 #include <iostream>
-#include <iomanip>
-#include "../headers/Process.h"
 
 void FCFS::verifyProcessesToCreate() {
     for (const auto &process: processes) {
@@ -17,11 +14,6 @@ void FCFS::verifyProcessesToCreate() {
     }
 }
 
-FCFS::FCFS(std::vector<Process *> processes) {
-    this->processes = processes;
-}
-
-
 void FCFS::initialize() {
     if (!readyQueue.empty()) {
         currentProcess = readyQueue.front();
@@ -29,25 +21,25 @@ void FCFS::initialize() {
         workingContext = currentProcess->getContext();
         currentProcess->schedule();
         currentProcess->run();
+        state = RUNNING;
     }
-    state = RUNNING;
 }
 
 void FCFS::run() {
-    currentProcess->run();
-    if (currentProcess->isRunning()) {
-        return;
-    }
-    currentProcess->finalize(time);
-    processesStats.push_back(currentProcess->getStats());
-    if (!readyQueue.empty()) {
-        currentProcess = readyQueue.front();
-        readyQueue.pop();
-        workingContext = currentProcess->getContext();
-        currentProcess->schedule();
-        currentProcess->run();
+    if (currentProcess->isOver()){
+        currentProcess->finalize(time);
+        processesStats.push_back(currentProcess->getStats());
+        if (!readyQueue.empty()) {
+            currentProcess = readyQueue.front();
+            readyQueue.pop();
+            workingContext = currentProcess->getContext();
+            currentProcess->schedule();
+            currentProcess->run();
+        } else {
+            state = FINISHED;
+        }
     } else {
-        state = FINISHED;
+        currentProcess->run();
     }
 }
 

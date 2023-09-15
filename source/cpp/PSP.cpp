@@ -3,6 +3,7 @@
 //
 
 #include "../headers/PSP.h"
+#include <utility>
 #include <vector>
 #include <iostream>
 #include <iomanip>
@@ -21,11 +22,6 @@ void PSP::verifyProcessesToCreate() {
         }
     }
 }
-
-PSP::PSP(std::vector<Process *> processes) {
-    this->processes = processes;
-}
-
 
 void PSP::initialize() {
     if (!readyList.empty()) {

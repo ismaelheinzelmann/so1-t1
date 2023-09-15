@@ -3,12 +3,8 @@
 //
 
 #include "../headers/SJF.h"
-#include <list>
-#include <iostream>
-#include <iomanip>
-#include "../headers/Process.h"
 
-bool compareDuration(Process* a, Process* b){
+bool compareDuration(Process *a, Process *b) {
     return a->getDuration() < b->getDuration();
 }
 
@@ -22,11 +18,6 @@ void SJF::verifyProcessesToCreate() {
         }
     }
 }
-
-SJF::SJF(std::vector<Process *> processes) {
-    this->processes = processes;
-}
-
 
 void SJF::initialize() {
     if (!readyList.empty()) {

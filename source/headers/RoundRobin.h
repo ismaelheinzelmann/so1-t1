@@ -13,7 +13,9 @@
 
 class RoundRobin : public Scheduler {
 public:
-    explicit RoundRobin(std::vector<Process *> processes);
+    explicit RoundRobin(std::vector<Process *> processes){
+        this->processes = std::move(processes);
+    }
 
     void runScheduler() override;
 
