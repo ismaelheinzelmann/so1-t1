@@ -20,13 +20,12 @@ void FCFS::initialize() {
         readyQueue.pop();
         workingContext = currentProcess->getContext();
         currentProcess->schedule();
-        currentProcess->run();
         state = RUNNING;
     }
 }
 
 void FCFS::run() {
-    if (currentProcess->isOver()){
+    if (currentProcess->isOver()) {
         currentProcess->finalize(time);
         processesStats.push_back(currentProcess->getStats());
         if (!readyQueue.empty()) {
@@ -44,7 +43,30 @@ void FCFS::run() {
 }
 
 void FCFS::runScheduler() {
-    Scheduler::runScheduler();
+    printTimelineHeader();
+    verifyProcessesToCreate();
+    while (processes.size() != processesStats.size()) {
+        if (readyQueue.empty()) {
+            printTimeline();
+            time++;
+            verifyProcessesToCreate();
+            continue;
+        }
+        currentProcess = readyQueue.front();
+        readyQueue.pop();
+        currentProcess->schedule();
+        workingContext = currentProcess->getContext();
+        for (int i = 0; i < currentProcess->getDuration(); ++i) {
+            currentProcess->run();
+            printTimeline();
+            time++;
+            verifyProcessesToCreate();
+        }
+        currentProcess->finalize(time);
+        processesStats.push_back(currentProcess->getStats());
+    }
+
+    printProcessesStats();
 }
 
 void FCFS::printTimelineHeader() {
