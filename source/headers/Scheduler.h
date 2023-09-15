@@ -7,29 +7,14 @@
 
 #include <iostream>
 #include <iomanip>
+#include <vector>
+#include "Process.h"
+#include "ProcessContext.h"
+#include <algorithm>
 
 class Scheduler {
 
 protected:
-    virtual void runScheduler() {
-        printTimelineHeader();
-        while (true) {
-            verifyProcessesToCreate();
-            switch (state) {
-                case INITIALIZED:
-                    initialize();
-                    break;
-                case RUNNING:
-                    printTimeline();
-                    run();
-                    break;
-                case FINISHED:
-                    printProcessesStats();
-                    return;
-            }
-            time++;
-        }
-    }
 
     virtual void verifyProcessesToCreate() = 0;
 
@@ -60,6 +45,11 @@ protected:
     virtual void run() = 0;
 
     virtual void printProcessesStats() {
+        //sort processStats by id
+        std::sort(processesStats.begin(), processesStats.end(),
+                  [](const Process::ProcessStats &a, const Process::ProcessStats &b) -> bool {
+                      return a.id < b.id;
+                  });
         std::cout << "Processo\tTurnaround\tWaiting\t\tTroca de Contexto" << std::endl;
         for (const auto &processStats: processesStats) {
             std::cout << processStats.id << "\t\t\t" << processStats.turnarroundTime << "\t\t\t"
@@ -82,6 +72,26 @@ protected:
     ProcessContext workingContext = ProcessContext();
     std::vector<Process::ProcessStats> processesStats;
 
+public:
+    virtual void runScheduler() {
+        printTimelineHeader();
+        while (true) {
+            verifyProcessesToCreate();
+            switch (state) {
+                case INITIALIZED:
+                    initialize();
+                    break;
+                case RUNNING:
+                    printTimeline();
+                    run();
+                    break;
+                case FINISHED:
+                    printProcessesStats();
+                    return;
+            }
+            time++;
+        }
+    }
 };
 
 #endif //SO1_T1_SCHEDULER_H

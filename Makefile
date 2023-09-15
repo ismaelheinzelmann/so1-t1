@@ -1,7 +1,7 @@
 CXX := g++
 CXXFLAGS := -std=c++11 -Wall -Wextra
 
-SRCDIR := source
+SRCDIR := source/cpp
 OBJDIR := obj
 BINDIR := bin
 
@@ -32,6 +32,6 @@ run: clean all input
 	./$(TARGET)
 
 input:
-	cp -f entrada.txt $(BINDIR)/input.txt
+	cp -f entrada.txt $(BINDIR)/entrada.txt
 
 .PHONY: all clean

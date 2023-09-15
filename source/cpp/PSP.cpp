@@ -1,34 +1,33 @@
 //
-// Created by ismael on 31/08/23.
+// Created by novais 10/09/23.
 //
 
-#include "SJF.h"
-#include <list>
+#include "../headers/PSP.h"
+#include <vector>
 #include <iostream>
 #include <iomanip>
-#include "Process.h"
+#include "../headers/Process.h"
 
-bool compareDuration(Process* a, Process* b){
-    return a->getDuration() < b->getDuration();
+bool PSP::comparePriority(Process* a, Process* b){
+    return a->getPriority() > b->getPriority();
 }
 
-void SJF::verifyProcessesToCreate() {
+void PSP::verifyProcessesToCreate() {
     for (const auto &process: processes) {
         if (process->getStartTime() == time) {
             process->create();
-            // readyList.insert(std::lower_bound(readyList.begin(), readyList.end(), process, compareDuration), process);
             readyList.push_front(process);
-            readyList.sort(compareDuration);
+            readyList.sort(comparePriority);
         }
     }
 }
 
-SJF::SJF(std::vector<Process *> processes) {
+PSP::PSP(std::vector<Process *> processes) {
     this->processes = processes;
 }
 
 
-void SJF::initialize() {
+void PSP::initialize() {
     if (!readyList.empty()) {
         currentProcess = readyList.front();
         readyList.pop_front();
@@ -39,9 +38,9 @@ void SJF::initialize() {
     state = RUNNING;
 }
 
-void SJF::run() {
+void PSP::run() {
     currentProcess->run();
-    if (currentProcess->running()) {
+    if (currentProcess->isRunning()) {
         return;
     }
     currentProcess->finalize(time);
@@ -57,18 +56,18 @@ void SJF::run() {
     }
 }
 
-void SJF::runScheduler() {
+void PSP::runScheduler() {
     Scheduler::runScheduler();
 }
 
-void SJF::printTimelineHeader() {
+void PSP::printTimelineHeader() {
     Scheduler::printTimelineHeader();
 }
 
-void SJF::printTimeline() {
+void PSP::printTimeline() {
     Scheduler::printTimeline();
 }
 
-void SJF::printProcessesStats() {
+void PSP::printProcessesStats() {
     Scheduler::printProcessesStats();
 }

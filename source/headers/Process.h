@@ -54,9 +54,11 @@ public:
 
     void finalize(int time);
 
-    bool running() const;
+    bool isRunning() const;
 
     ProcessStats getStats();
+
+    bool isOver() const;
 
 private:
     int id;

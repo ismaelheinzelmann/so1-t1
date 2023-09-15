@@ -1,33 +1,34 @@
 //
-// Created by novais 10/09/23.
+// Created by ismael on 31/08/23.
 //
 
-#include "PCP.h"
-#include <vector>
+#include "../headers/SJF.h"
+#include <list>
 #include <iostream>
 #include <iomanip>
-#include "Process.h"
+#include "../headers/Process.h"
 
-bool PCP::comparePriority(Process* a, Process* b){
-    return a->getPriority() > b->getPriority();
+bool compareDuration(Process* a, Process* b){
+    return a->getDuration() < b->getDuration();
 }
 
-void PCP::verifyProcessesToCreate() {
+void SJF::verifyProcessesToCreate() {
     for (const auto &process: processes) {
         if (process->getStartTime() == time) {
             process->create();
+            // readyList.insert(std::lower_bound(readyList.begin(), readyList.end(), process, compareDuration), process);
             readyList.push_front(process);
-            readyList.sort(comparePriority);
+            readyList.sort(compareDuration);
         }
     }
 }
 
-PCP::PCP(std::vector<Process *> processes) {
+SJF::SJF(std::vector<Process *> processes) {
     this->processes = processes;
 }
 
 
-void PCP::initialize() {
+void SJF::initialize() {
     if (!readyList.empty()) {
         currentProcess = readyList.front();
         readyList.pop_front();
@@ -38,26 +39,14 @@ void PCP::initialize() {
     state = RUNNING;
 }
 
-void PCP::run() {
+void SJF::run() {
     currentProcess->run();
-    if (!readyList.empty() && currentProcess->getPriority() < readyList.front()->getPriority()) {
-        currentProcess->preempt();
-        readyList.push_back(currentProcess);
-        readyList.sort(comparePriority);
-        currentProcess = readyList.front();
-        readyList.pop_front();
-        workingContext = currentProcess->getContext();
-        currentProcess->schedule();
-        currentProcess->run();
-        return;
-    }
-    if (currentProcess->running()) {
+    if (currentProcess->isRunning()) {
         return;
     }
     currentProcess->finalize(time);
     processesStats.push_back(currentProcess->getStats());
     if (!readyList.empty()) {
-        readyList.sort(comparePriority);
         currentProcess = readyList.front();
         readyList.pop_front();
         workingContext = currentProcess->getContext();
@@ -68,18 +57,18 @@ void PCP::run() {
     }
 }
 
-void PCP::runScheduler() {
+void SJF::runScheduler() {
     Scheduler::runScheduler();
 }
 
-void PCP::printTimelineHeader() {
+void SJF::printTimelineHeader() {
     Scheduler::printTimelineHeader();
 }
 
-void PCP::printTimeline() {
+void SJF::printTimeline() {
     Scheduler::printTimeline();
 }
 
-void PCP::printProcessesStats() {
+void SJF::printProcessesStats() {
     Scheduler::printProcessesStats();
 }

@@ -1,36 +1,31 @@
 //
-// Created by novais 10/09/23.
+// Created by ismael on 31/08/23.
 //
 
-#include "PSP.h"
+#include "../headers/FCFS.h"
 #include <vector>
 #include <iostream>
 #include <iomanip>
-#include "Process.h"
+#include "../headers/Process.h"
 
-bool PSP::comparePriority(Process* a, Process* b){
-    return a->getPriority() > b->getPriority();
-}
-
-void PSP::verifyProcessesToCreate() {
+void FCFS::verifyProcessesToCreate() {
     for (const auto &process: processes) {
         if (process->getStartTime() == time) {
             process->create();
-            readyList.push_front(process);
-            readyList.sort(comparePriority);
+            readyQueue.push(process);
         }
     }
 }
 
-PSP::PSP(std::vector<Process *> processes) {
+FCFS::FCFS(std::vector<Process *> processes) {
     this->processes = processes;
 }
 
 
-void PSP::initialize() {
-    if (!readyList.empty()) {
-        currentProcess = readyList.front();
-        readyList.pop_front();
+void FCFS::initialize() {
+    if (!readyQueue.empty()) {
+        currentProcess = readyQueue.front();
+        readyQueue.pop();
         workingContext = currentProcess->getContext();
         currentProcess->schedule();
         currentProcess->run();
@@ -38,16 +33,16 @@ void PSP::initialize() {
     state = RUNNING;
 }
 
-void PSP::run() {
+void FCFS::run() {
     currentProcess->run();
-    if (currentProcess->running()) {
+    if (currentProcess->isRunning()) {
         return;
     }
     currentProcess->finalize(time);
     processesStats.push_back(currentProcess->getStats());
-    if (!readyList.empty()) {
-        currentProcess = readyList.front();
-        readyList.pop_front();
+    if (!readyQueue.empty()) {
+        currentProcess = readyQueue.front();
+        readyQueue.pop();
         workingContext = currentProcess->getContext();
         currentProcess->schedule();
         currentProcess->run();
@@ -56,18 +51,18 @@ void PSP::run() {
     }
 }
 
-void PSP::runScheduler() {
+void FCFS::runScheduler() {
     Scheduler::runScheduler();
 }
 
-void PSP::printTimelineHeader() {
+void FCFS::printTimelineHeader() {
     Scheduler::printTimelineHeader();
 }
 
-void PSP::printTimeline() {
+void FCFS::printTimeline() {
     Scheduler::printTimeline();
 }
 
-void PSP::printProcessesStats() {
+void FCFS::printProcessesStats() {
     Scheduler::printProcessesStats();
 }

@@ -2,7 +2,7 @@
 // Created by ismael on 31/08/23.
 //
 
-#include "ProcessContext.h"
+#include "../headers/ProcessContext.h"
 
 ProcessContext::ProcessContext() {
     generalRegisters = std::array<Register, 6>();

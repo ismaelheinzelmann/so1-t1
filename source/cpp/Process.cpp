@@ -2,7 +2,7 @@
 // Created by ismael on 31/08/23.
 //
 
-#include "Process.h"
+#include "../headers/Process.h"
 #include <iostream>
 using namespace std;
 
@@ -79,11 +79,16 @@ void Process::preempt() {
 }
 
 void Process::finalize(int time) {
+    state = FINISHED;
     turnarroundTime = time - startTime;
 }
 
-bool Process::running() const {
+bool Process::isRunning() const {
     return state == PROCESS_STATE::RUNNING;
+}
+
+bool Process::isOver() const {
+    return remainingTime == 0;
 }
 
 Process::ProcessStats Process::getStats() {
