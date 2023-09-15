@@ -79,6 +79,7 @@ void Process::preempt() {
 }
 
 void Process::finalize(int time) {
+    state = FINISHED;
     turnarroundTime = time - startTime;
 }
 

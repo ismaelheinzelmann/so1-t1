@@ -19,8 +19,7 @@ public:
 
 private:
     std::list<Process *> readyList = std::list<Process *>();
-    int quantum = 2;
-    int currentQuantum = 0;
+    int quantum = 3;
 
     void initialize() override;
 
@@ -32,7 +31,7 @@ private:
 
     void scheduleNextProcess();
 
-    void run() override;
+    void run() override{};
 
     void verifyProcessesToCreate() override;
 

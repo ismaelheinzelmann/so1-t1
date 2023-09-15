@@ -35,11 +35,6 @@ void RoundRobin::scheduleNextProcess() {
     readyList.pop_front();
 }
 
-//Chegou em 0 ? Se sim, escalona o próximo processo, roda o processo atual e verifica se ele terminou
-//Chegou no quantum ? Se sim, verifica se o processo terminou, se sim, escalona o próximo processo, se não, preempta o processo atual
-void RoundRobin::run() {
-}
-
 void RoundRobin::verifyProcessesToCreate() {
     for (auto &process: this->processes) {
         if (process->getStartTime() == this->time) {
@@ -63,22 +58,23 @@ void RoundRobin::printProcessesStats() {
 
 void RoundRobin::runScheduler() {
     printTimelineHeader();
-    while (readyList.empty()) {
-        verifyProcessesToCreate();
-    }
-    while (processes.size() != processesStats.size()) {
+    verifyProcessesToCreate();
+    while (processes.size() != processesStats.size() && !readyList.empty()) {
         scheduleNextProcess();
-        for (int i = 0; i < quantum; i++) {
-            verifyProcessesToCreate();
+        for (int i = 0; i < quantum; ++i) {
+            if (currentProcess->isOver()) {
+                break;
+            }
+            if (time != 0) verifyProcessesToCreate();
             currentProcess->run();
             printTimeline();
             time++;
-            if (currentProcess->isOver()) {
-                finalizeProcess(currentProcess);
-                break;
-            }
         }
-        preemptCurrentProcess();
+        if (!currentProcess->isOver()) {
+            preemptCurrentProcess();
+        } else {
+            finalizeProcess(currentProcess);
+        }
     }
     printProcessesStats();
 }
