@@ -8,7 +8,7 @@
 #include <iomanip>
 #include "../headers/Process.h"
 
-bool comparePriority(Process* a, Process* b){
+bool PCP::comparePriority(Process* a, Process* b){
     return a->getPriority() < b->getPriority();
 }
 
