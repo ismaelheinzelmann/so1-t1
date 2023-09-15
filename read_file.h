@@ -66,7 +66,7 @@ public:
             processes.push_back(p);
         }
 
-        cout << "Quantidade de processos lidos do arquivo: " << processes.size() << endl;
+//        cout << "Quantidade de processos lidos do arquivo: " << processes.size() << endl;
     }
 
     void print_processes_params() {

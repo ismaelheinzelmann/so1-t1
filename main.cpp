@@ -66,7 +66,5 @@ int main() {
         }
     } while (quebra);
 
-    for (auto &process: processes) delete process;
-
-
+    delete scheduler;
 }

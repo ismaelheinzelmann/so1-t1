@@ -14,7 +14,14 @@
 
 class Scheduler {
 
+public:
+    virtual ~Scheduler() {
+        for (auto &process: processes) {
+            delete process;
+        }
+    }
 protected:
+
 
     virtual void verifyProcessesToCreate() = 0;
 
@@ -59,12 +66,12 @@ protected:
         }
     }
 
-
     enum SCHEDULER_STATES {
         INITIALIZED,
         RUNNING,
         FINISHED
     };
+
     SCHEDULER_STATES state = INITIALIZED;
     int time = 0;
     std::vector<Process *> processes;
