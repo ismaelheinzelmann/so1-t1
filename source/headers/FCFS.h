@@ -63,6 +63,12 @@ private:
      *
      */
     void printProcessesStats() override;
+
+    /// @brief Escalona o próximo processo na fila de execução.
+    void scheduleNextProcess();
+
+    /// @brief Finaliza o processo atual e insere suas estatísticas na lista de estatísticas.
+    void finalizeCurrentProcess();
 };
 
 #endif //SO1_T1_FCFS_H

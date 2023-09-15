@@ -24,21 +24,29 @@ void FCFS::runScheduler() {
             verifyProcessesToCreate();
             continue;
         }
-        currentProcess = readyQueue.front();
-        readyQueue.pop();
-        currentProcess->schedule();
-        workingContext = currentProcess->getContext();
+        scheduleNextProcess();
         for (int i = 0; i < currentProcess->getDuration(); ++i) {
             currentProcess->run();
             printTimeline();
             time++;
             verifyProcessesToCreate();
         }
-        currentProcess->finalize(time);
-        processesStats.push_back(currentProcess->getStats());
+        finalizeCurrentProcess();
     }
 
     printProcessesStats();
+}
+
+void FCFS::finalizeCurrentProcess() {
+    currentProcess->finalize(time);
+    processesStats.push_back(currentProcess->getStats());
+}
+
+void FCFS::scheduleNextProcess() {
+    currentProcess = readyQueue.front();
+    readyQueue.pop();
+    currentProcess->schedule();
+    workingContext = currentProcess->getContext();
 }
 
 void FCFS::printTimelineHeader() {

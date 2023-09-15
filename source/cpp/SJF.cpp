@@ -29,20 +29,28 @@ void SJF::runScheduler() {
             verifyProcessesToCreate();
             continue;
         }
-        currentProcess = readyList.front();
-        readyList.pop_front();
-        currentProcess->schedule();
-        workingContext = currentProcess->getContext();
+        scheduleNextProcess();
         for (int i = 0; i < currentProcess->getDuration(); ++i) {
             currentProcess->run();
             printTimeline();
             time++;
             verifyProcessesToCreate();
         }
-        currentProcess->finalize(time);
-        processesStats.push_back(currentProcess->getStats());
+        finalizeCurrentProcess();
     }
     printProcessesStats();
+}
+
+void SJF::finalizeCurrentProcess() {
+    currentProcess->finalize(time);
+    processesStats.push_back(currentProcess->getStats());
+}
+
+void SJF::scheduleNextProcess() {
+    currentProcess = readyList.front();
+    readyList.pop_front();
+    currentProcess->schedule();
+    workingContext = currentProcess->getContext();
 }
 
 void SJF::printTimelineHeader() {

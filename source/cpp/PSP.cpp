@@ -33,20 +33,28 @@ void PSP::runScheduler() {
             verifyProcessesToCreate();
             continue;
         }
-        currentProcess = readyList.front();
-        readyList.pop_front();
-        currentProcess->schedule();
-        workingContext = currentProcess->getContext();
+        scheduleNextProcess();
         for (int i = 0; i < currentProcess->getDuration(); ++i) {
             currentProcess->run();
             printTimeline();
             time++;
             verifyProcessesToCreate();
         }
-        currentProcess->finalize(time);
-        processesStats.push_back(currentProcess->getStats());
+        finalizeCurrentProcess();
     }
     printProcessesStats();
+}
+
+void PSP::finalizeCurrentProcess() {
+    currentProcess->finalize(time);
+    processesStats.push_back(currentProcess->getStats());
+}
+
+void PSP::scheduleNextProcess() {
+    currentProcess = readyList.front();
+    readyList.pop_front();
+    currentProcess->schedule();
+    workingContext = currentProcess->getContext();
 }
 
 void PSP::printTimelineHeader() {

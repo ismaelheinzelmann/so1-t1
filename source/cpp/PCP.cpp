@@ -32,20 +32,14 @@ void PCP::runScheduler() {
             verifyProcessesToCreate();
             continue;
         }
-        currentProcess = readyList.front();
-        readyList.pop_front();
-        currentProcess->schedule();
-        workingContext = currentProcess->getContext();
+        scheduleNextProcess();
         for (int i = 0; i < currentProcess->getDuration(); i++) {
             if (currentProcess->isOver()){
                 break;
             }
             if (!readyList.empty()) {
                 if (currentProcess->getPriority() < readyList.front()->getPriority()) {
-                    currentProcess->preempt();
-                    currentProcess->setContext(workingContext);
-                    readyList.push_back(currentProcess);
-                    readyList.sort(comparePriority);
+                    preemptCurrentProcess();
                     break;
                 }
             }
@@ -55,11 +49,29 @@ void PCP::runScheduler() {
             verifyProcessesToCreate();
         }
         if (currentProcess->isOver()) {
-            currentProcess->finalize(time);
-            processesStats.push_back(currentProcess->getStats());
+            finalizeCurrentProcess();
         }
     }
     printProcessesStats();
+}
+
+void PCP::finalizeCurrentProcess() {
+    currentProcess->finalize(time);
+    processesStats.push_back(currentProcess->getStats());
+}
+
+void PCP::preemptCurrentProcess() {
+    currentProcess->preempt();
+    currentProcess->setContext(workingContext);
+    readyList.push_back(currentProcess);
+    readyList.sort(comparePriority);
+}
+
+void PCP::scheduleNextProcess() {
+    currentProcess = readyList.front();
+    readyList.pop_front();
+    currentProcess->schedule();
+    workingContext = currentProcess->getContext();
 }
 
 void PCP::printTimelineHeader() {
