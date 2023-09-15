@@ -31,7 +31,6 @@ void PSP::initialize() {
         currentProcess->schedule();
         currentProcess->run();
     }
-    state = RUNNING;
 }
 
 void PSP::run() {
