@@ -82,8 +82,12 @@ void Process::finalize(int time) {
     turnarroundTime = time - startTime;
 }
 
-bool Process::running() const {
+bool Process::isRunning() const {
     return state == PROCESS_STATE::RUNNING;
+}
+
+bool Process::isOver() const {
+    return remainingTime == 0;
 }
 
 Process::ProcessStats Process::getStats() {

@@ -1,5 +1,6 @@
 #include "RoundRobin.h"
 #include "Process.h"
+#include <iostream>
 
 RoundRobin::RoundRobin(std::vector<Process *> processes) {
     this->processes = processes;
@@ -16,17 +17,12 @@ void RoundRobin::preemptCurrentProcess() {
     currentProcess->preempt();
     currentProcess->setContext(workingContext);
     readyList.push_back(currentProcess);
-    currentProcess = nullptr;
 }
 
 void RoundRobin::scheduleProcess(Process *process) {
-    if (currentProcess != nullptr) {
-        preemptProcess(currentProcess);
-    }
     currentProcess = process;
     workingContext = currentProcess->getContext();
     currentProcess->schedule();
-    currentProcess->run();
 }
 
 void RoundRobin::finalizeProcess(Process *process) {
@@ -39,35 +35,15 @@ void RoundRobin::scheduleNextProcess() {
     readyList.pop_front();
 }
 
+//Chegou em 0 ? Se sim, escalona o próximo processo, roda o processo atual e verifica se ele terminou
+//Chegou no quantum ? Se sim, verifica se o processo terminou, se sim, escalona o próximo processo, se não, preempta o processo atual
 void RoundRobin::run() {
-    if (processes.size() == processesStats.size()) {
-        state = FINISHED;
-        return;
-    }
-    currentQuantum++;
-    if (currentQuantum == 0) {
-        scheduleNextProcess();
-        return;
-    }
-    if (currentQuantum == quantum) {
-        if (!currentProcess->running()) {
-            finalizeProcess(currentProcess);
-        }
-        scheduleNextProcess();
-        currentQuantum = 0;
-        return;
-    }
-    currentProcess->run();
-    if (!currentProcess->running()) {
-        currentQuantum = 0;
-        finalizeProcess(currentProcess);
-        scheduleNextProcess();
-    }
 }
 
 void RoundRobin::verifyProcessesToCreate() {
     for (auto &process: this->processes) {
         if (process->getStartTime() == this->time) {
+            process->create();
             this->readyList.push_back(process);
         }
     }
@@ -86,5 +62,23 @@ void RoundRobin::printProcessesStats() {
 }
 
 void RoundRobin::runScheduler() {
-    Scheduler::runScheduler();
+    printTimelineHeader();
+    while (readyList.empty()) {
+        verifyProcessesToCreate();
+    }
+    while (processes.size() != processesStats.size()) {
+        scheduleNextProcess();
+        for (int i = 0; i < quantum; i++) {
+            verifyProcessesToCreate();
+            currentProcess->run();
+            printTimeline();
+            time++;
+            if (currentProcess->isOver()) {
+                finalizeProcess(currentProcess);
+                break;
+            }
+        }
+        preemptCurrentProcess();
+    }
+    printProcessesStats();
 }

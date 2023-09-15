@@ -24,7 +24,7 @@ private:
 
     void initialize() override;
 
-    void preemptProcess(Process *process);
+    void preemptCurrentProcess();
 
     void scheduleProcess(Process *process);
 

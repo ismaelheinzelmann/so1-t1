@@ -35,7 +35,7 @@ void FCFS::initialize() {
 
 void FCFS::run() {
     currentProcess->run();
-    if (currentProcess->running()) {
+    if (currentProcess->isRunning()) {
         return;
     }
     currentProcess->finalize(time);

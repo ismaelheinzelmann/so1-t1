@@ -40,7 +40,7 @@ void PCP::initialize() {
 
 void PCP::run() {
     currentProcess->run();
-    if (currentProcess->running()) {
+    if (currentProcess->isRunning()) {
         return;
     }
     currentProcess->finalize(time);
