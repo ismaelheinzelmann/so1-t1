@@ -95,7 +95,6 @@ public:
             switch (state) {
                 case INITIALIZED:
                     initialize();
-                    printTimeline();
                     break;
                 case RUNNING:
                     printTimeline();
