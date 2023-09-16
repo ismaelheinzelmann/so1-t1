@@ -46,13 +46,20 @@ void RoundRobin::printProcessesStats() {
 void RoundRobin::runScheduler() {
     printTimelineHeader();
     verifyProcessesToCreate();
-    while (processes.size() != processesStats.size() && !readyList.empty()) {
+    while (processes.size() != processesStats.size()) {
+        if (readyList.empty()) {
+            printTimeline();
+            time++;
+            verifyProcessesToCreate();
+            continue;
+        }
         scheduleNextProcess();
         for (int i = 0; i < quantum; ++i) {
+            if (time != 0) verifyProcessesToCreate();
             if (currentProcess->isOver()) {
                 break;
             }
-            if (time != 0) verifyProcessesToCreate();
+            currentProcess->schedule();
             currentProcess->run();
             printTimeline();
             time++;
